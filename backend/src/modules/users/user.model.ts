@@ -1,7 +1,15 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
+import {
+  transformId,
+  composeTransforms,
+  softDeletePlugin,
+  auditPlugin,
+  type SoftDeleteStatics,
+  type AuditFields,
+} from "@/common/mongoose";
 
-export interface IUser extends Document {
+export interface IUser extends Document, AuditFields {
   fullName: string;
   email: string;
   password: string;
@@ -10,6 +18,7 @@ export interface IUser extends Document {
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   deletedAt?: Date | null;
+  deletedBy?: mongoose.Types.ObjectId | null;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
@@ -52,24 +61,19 @@ const userSchema = new Schema<IUser>(
       type: Date,
       select: false,
     },
-    deletedAt: {
-      type: Date,
-      default: null,
-    },
   },
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret: Record<string, any>) {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
+      transform: composeTransforms(transformId, (_doc, ret) => {
         delete ret.password;
-***REMOVED*** ret;
-      },
+      }),
     },
   }
 );
+
+userSchema.plugin(softDeletePlugin);
+userSchema.plugin(auditPlugin);
 
 userSchema.index({ email: 1 }, { unique: true });
 
@@ -85,4 +89,4 @@ userSchema.methods.comparePassword = async function (
   return bcrypt.compare(candidate, this.password);
 };
 
-export const User = mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.model<IUser, SoftDeleteStatics<IUser>>("User", userSchema);
