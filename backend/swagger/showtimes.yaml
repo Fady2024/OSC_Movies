@@ -1,0 +1,177 @@
+/showtimes:
+  get:
+    summary: List showtimes (filtered)
+    tags: [Showtimes]
+    parameters:
+      - in: query
+        name: movieId
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [upcoming, past]
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum: [date_asc, date_desc]
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: hall
+        schema:
+          type: string
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+    responses:
+      200:
+        description: Showtime list with filters
+  post:
+    summary: Create showtime
+    tags: [Showtimes]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [movieId, date, startTime, endTime, hall, rows]
+            properties:
+              movieId:
+                type: string
+              date:
+                type: string
+                format: date
+              startTime:
+                type: string
+              endTime:
+                type: string
+              hall:
+                type: string
+              rows:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rowLabel:
+                      type: string
+                    seats:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          seatNumber:
+                            type: number
+                          type:
+                            type: string
+                            enum: [standard, vip]
+                          price:
+                            type: number
+    responses:
+      201:
+        description: Showtime created
+      403:
+        description: Admin only
+
+/showtimes/{id}:
+  get:
+    summary: Get showtime details
+    tags: [Showtimes]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Showtime details
+      404:
+        description: Showtime not found
+  put:
+    summary: Update showtime
+    tags: [Showtimes]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              startTime:
+                type: string
+              endTime:
+                type: string
+              hall:
+                type: string
+              rows:
+                type: array
+                items:
+                  type: object
+    responses:
+      200:
+        description: Showtime updated
+      403:
+        description: Admin only
+  delete:
+    summary: Delete showtime
+    tags: [Showtimes]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Showtime deleted
+      403:
+        description: Admin only
+
+/showtimes/{id}/seats:
+  get:
+    summary: Get available seats for showtime
+    tags: [Showtimes]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Seat availability
+      404:
+        description: Showtime not found

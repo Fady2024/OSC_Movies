@@ -1,0 +1,178 @@
+/movies:
+  get:
+    summary: List all movies
+    tags: [Movies]
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: genre
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [now_showing, coming_soon]
+    responses:
+      200:
+        description: Movie list with pagination
+  post:
+    summary: Create a new movie
+    tags: [Movies]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [title, description, genre, director, duration, releaseDate, posterUrl]
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              genre:
+                type: string
+              director:
+                type: string
+              duration:
+                type: number
+              rating:
+                type: number
+              releaseDate:
+                type: string
+                format: date
+              posterUrl:
+                type: string
+              trailerUrl:
+                type: string
+              status:
+                type: string
+                enum: [now_showing, coming_soon]
+    responses:
+      201:
+        description: Movie created
+      403:
+        description: Admin only
+
+/movies/deleted:
+  get:
+    summary: List soft-deleted movies
+    tags: [Movies]
+    security:
+      - bearerAuth: []
+    responses:
+      200:
+        description: Deleted movies list
+      403:
+        description: Admin only
+
+/movies/{id}:
+  get:
+    summary: Get movie by ID
+    tags: [Movies]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Movie details
+      404:
+        description: Movie not found
+  put:
+    summary: Update movie
+    tags: [Movies]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              genre:
+                type: string
+              director:
+                type: string
+              duration:
+                type: number
+              rating:
+                type: number
+              releaseDate:
+                type: string
+                format: date
+              posterUrl:
+                type: string
+              trailerUrl:
+                type: string
+              status:
+                type: string
+                enum: [now_showing, coming_soon]
+    responses:
+      200:
+        description: Movie updated
+      403:
+        description: Admin only
+  delete:
+    summary: Delete movie (soft delete)
+    tags: [Movies]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Movie deleted
+      403:
+        description: Admin only
+
+/movies/{id}/restore:
+  patch:
+    summary: Restore deleted movie
+    tags: [Movies]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Movie restored
+      403:
+        description: Admin only

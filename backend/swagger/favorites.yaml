@@ -1,0 +1,72 @@
+/favorites:
+  get:
+    summary: Get user paginated favorite movies
+    tags: [Favorites]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+    responses:
+      200:
+        description: Favorite movies list
+  post:
+    summary: Add movie to favorites
+    tags: [Favorites]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [movieId]
+            properties:
+              movieId:
+                type: string
+    responses:
+      201:
+        description: Added to favorites
+      409:
+        description: Already favorited
+
+/favorites/{id}:
+  delete:
+    summary: Remove a favorite
+    tags: [Favorites]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Favorite removed
+
+/favorites/check/{movieId}:
+  get:
+    summary: Check if movie is favorited
+    tags: [Favorites]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: movieId
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Favorite status
