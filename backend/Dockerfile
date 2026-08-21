@@ -14,6 +14,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
+COPY swagger ./swagger
 COPY ecosystem.config.cjs ./
 USER node
 EXPOSE 5000
