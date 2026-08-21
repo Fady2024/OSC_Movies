@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Pencil,
   Trash2,
+  PlayCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -32,6 +33,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { ErrorState } from "@/components/shared/states";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 import type { ReviewFormData } from "@/types/review.types";
 import {
   GENRE_LABELS,
@@ -56,6 +61,7 @@ export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [showTrailer, setShowTrailer] = useState(false);
 
   const { data: movie, isLoading, isError, refetch } = useQuery({
     queryKey: ["movie", id],
@@ -190,19 +196,32 @@ export function MovieDetailPage() {
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("movieDetail.trailer", "Trailer")}
               </h2>
-              <div className="overflow-hidden rounded-xl border border-border/60">
-                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-                  <iframe
-                    src={getYouTubeEmbedUrl(movie.trailerUrl)}
-                    title={`${movie.title} Trailer`}
-                    className="absolute inset-0 h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+              <button
+                onClick={() => setShowTrailer(true)}
+                className="flex items-center gap-3 rounded-xl border border-border/60 bg-card px-4 py-3 transition-colors hover:bg-accent w-full text-left"
+              >
+                <PlayCircle className="size-8 text-red-500" />
+                <div>
+                  <p className="font-medium">{t("movieDetail.watchTrailer", "Watch Trailer")}</p>
+                  <p className="text-xs text-muted-foreground">YouTube</p>
                 </div>
-              </div>
+              </button>
             </div>
           )}
+
+          <Dialog open={showTrailer} onOpenChange={setShowTrailer}>
+            <DialogContent className="max-w-3xl p-0 border-0 bg-black">
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  src={getYouTubeEmbedUrl(movie.trailerUrl!)}
+                  title={`${movie.title} Trailer`}
+                  className="absolute inset-0 h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
 
           {/* Cast & Crew */}
           <div className="grid gap-4 sm:grid-cols-2">

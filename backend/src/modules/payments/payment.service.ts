@@ -5,6 +5,7 @@ import { Showtime } from '@/modules/showtimes/showtime.model';
 import { stripe } from '@/config/stripe';
 import { AppError } from '@/common/errors/AppError';
 import { env } from '@/config/env';
+import { SeatReservation } from '@/modules/bookings/seat-reservation.model';
 import { broadcastShowtimeSeats, emitBookingEvent } from '@/socket/events';
 import { notifyShowtimeAlmostFull } from '@/modules/notifications/notification.service';
 import { hasScreeningStarted } from '@/modules/showtimes/showtime.util';
@@ -93,7 +94,7 @@ export const createPaymentIntent = async (
       await reservation.save({ session });
     }
 
-    showtime.bookedSeats += uniqueSeats.length;
+    showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtimeId });
     showtime.availableSeats = showtime.totalCapacity - showtime.bookedSeats;
     await showtime.save({ session });
 
@@ -175,7 +176,7 @@ export const handleWebhook = async (
 
         const showtime = await Showtime.findById(booking.showtime);
         if (showtime) {
-          showtime.bookedSeats -= booking.selectedSeats.length;
+          showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtime._id });
           showtime.availableSeats = showtime.totalCapacity - showtime.bookedSeats;
           await showtime.save();
           void broadcastShowtimeSeats(String(booking.showtime));

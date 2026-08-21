@@ -15,7 +15,7 @@ import paymentRoutes from "@/modules/payments/payment.routes";
 import emailRoutes from "@/modules/emails/email.routes";
 import favoriteRoutes from "@/modules/favorites/favorite.routes";
 import notificationRoutes from "@/modules/notifications/notification.routes";
-***REMOVED***viewRoutes from "@/modules/reviews/review.routes";
+import reviewRoutes from "@/modules/reviews/review.routes";
 import { asyncHandler } from "@/common/middleware/asyncHandler";
 import * as paymentController from "@/modules/payments/payment.controller";
 import { requestLogger } from "@/common/middleware/request-logger.middleware";

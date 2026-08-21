@@ -72,7 +72,7 @@ export const createBooking = async (
       await reservation.save({ session });
     }
 
-    showtime.bookedSeats += uniqueSeats.length;
+    showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtimeId }).session(session);
     showtime.availableSeats = showtime.totalCapacity - showtime.bookedSeats;
     await showtime.save({ session });
 
@@ -178,7 +178,7 @@ export const cancelBooking = async (bookingId: string, customerId: string): Prom
 
     await SeatReservation.deleteMany({ booking: bookingId }, { session });
 
-    showtime.bookedSeats -= booking.selectedSeats.length;
+    showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtime._id }).session(session);
     showtime.availableSeats = showtime.totalCapacity - showtime.bookedSeats;
     await showtime.save({ session });
 
