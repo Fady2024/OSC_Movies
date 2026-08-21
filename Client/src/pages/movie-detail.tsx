@@ -44,6 +44,13 @@ import {
 } from "@/utils/format";
 import { cn } from "@/lib/utils";
 
+function getYouTubeEmbedUrl(url: string): string {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if (match) return `https://www.youtube.com/embed/${match[1]}`;
+  if (url.includes("/embed/")) return url;
+  return url;
+}
+
 export function MovieDetailPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
@@ -176,6 +183,26 @@ export function MovieDetailPage() {
             </h2>
             <p className="leading-relaxed text-foreground/90">{movie.description}</p>
           </div>
+
+          {/* Trailer */}
+          {movie.trailerUrl && (
+            <div className="space-y-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("movieDetail.trailer", "Trailer")}
+              </h2>
+              <div className="overflow-hidden rounded-xl border border-border/60">
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    src={getYouTubeEmbedUrl(movie.trailerUrl)}
+                    title={`${movie.title} Trailer`}
+                    className="absolute inset-0 h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Cast & Crew */}
           <div className="grid gap-4 sm:grid-cols-2">
