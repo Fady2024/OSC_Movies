@@ -90,7 +90,7 @@ function BookingCard({ booking, index, onCancel }: { booking: Booking; index: nu
   const statusCfg = statusConfig[booking.status];
   const StatusIcon = statusCfg.icon;
   const cancellable =
-    booking.status === "confirmed" && canCancelBooking(booking.date);
+    booking.status === "confirmed" && canCancelBooking(booking.date, booking.startTime);
 
   return (
     <motion.div
