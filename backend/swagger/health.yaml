@@ -1,0 +1,9 @@
+/health:
+  get:
+    summary: Service health check
+    tags: [Health]
+    responses:
+      200:
+        description: All services healthy
+      503:
+        description: One or more services down

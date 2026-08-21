@@ -1,0 +1,35 @@
+/payments/create-intent:
+  post:
+    summary: Create Stripe PaymentIntent
+    tags: [Payments]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [bookingId]
+            properties:
+              bookingId:
+                type: string
+    responses:
+      200:
+        description: Payment intent created
+
+/payments/status/{bookingId}:
+  get:
+    summary: Get payment status
+    tags: [Payments]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: bookingId
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Payment status

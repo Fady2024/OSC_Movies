@@ -1,0 +1,221 @@
+/admin/stats:
+  get:
+    summary: Get dashboard statistics
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    responses:
+      200:
+        description: Dashboard stats
+      403:
+        description: Admin only
+
+/admin/bookings:
+  get:
+    summary: List all bookings filtered and paginated
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [pending, confirmed, cancelled, completed]
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum: [date_asc, date_desc]
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+    responses:
+      200:
+        description: Bookings list
+      403:
+        description: Admin only
+
+/admin/bookings/{id}/status:
+  patch:
+    summary: Update booking status
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status]
+            properties:
+              status:
+                type: string
+                enum: [pending, confirmed, cancelled, completed]
+    responses:
+      200:
+        description: Status updated
+      403:
+        description: Admin only
+
+/admin/users:
+  get:
+    summary: List all users with booking stats
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: role
+        schema:
+          type: string
+          enum: [customer, admin]
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+    responses:
+      200:
+        description: Users list
+      403:
+        description: Admin only
+
+/admin/users/{id}/role:
+  patch:
+    summary: Update user role
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [role]
+            properties:
+              role:
+                type: string
+                enum: [customer, admin]
+    responses:
+      200:
+        description: Role updated
+      403:
+        description: Admin only or self-change rejected
+
+/admin/logs:
+  get:
+    summary: Search Elasticsearch API logs
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: level
+        schema:
+          type: string
+          enum: [info, warn, error]
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 50
+    responses:
+      200:
+        description: Log entries
+      403:
+        description: Admin only
+
+/admin/reviews:
+  get:
+    summary: List all reviews with search and rating filter
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: rating
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 10
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+    responses:
+      200:
+        description: Reviews list
+      403:
+        description: Admin only
+
+/admin/reviews/{id}:
+  delete:
+    summary: Delete any review moderation
+    tags: [Admin]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Review deleted
+      403:
+        description: Admin only
