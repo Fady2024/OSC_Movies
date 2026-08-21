@@ -170,7 +170,6 @@ OSC_Movies/
 | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | **[Client README](Client/README.md)** | Frontend architecture, pages, components, Stripe integration, animations                                                |
 | **[API README](backend/README.md)**   | Backend architecture, modules, database schemas, API endpoints, middleware                                              |
-| **[Postman Collection](Postman/)**    | Ready-to-import collection (48 requests, 10 folders) + Local/Production environments + `build-collection.cjs` generator |
 ---
 
 ## Tech Stack

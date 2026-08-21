@@ -94,7 +94,7 @@ export const createPaymentIntent = async (
       await reservation.save({ session });
     }
 
-    showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtimeId });
+    showtime.bookedSeats = await SeatReservation.countDocuments({ showtime: showtimeId }).session(session);
     showtime.availableSeats = showtime.totalCapacity - showtime.bookedSeats;
     await showtime.save({ session });
 
