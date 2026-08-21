@@ -366,10 +366,24 @@ Once the server is running, visit:
 http://localhost:5000/api/docs
 ```
 
+### Live API
+
+The API is deployed on Railway:
+
+```
+https://oscmovies-production.up.railway.app/api/docs
+```
+
 ### API Base URL
 
 ```
 http://localhost:5000/api
+```
+
+**Production:**
+
+```
+https://oscmovies-production.up.railway.app/api
 ```
 
 ### Endpoints Overview
