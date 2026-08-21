@@ -787,9 +787,6 @@ schema.set("toJSON", {
 npm run seed
 ```
 
-| Role         | Email                | Password    |
-| ------------ | -------------------- | ----------- |
-
 ### Seed Data Includes
 
 - 8+ movies across multiple genres (Action, Sci-Fi, Drama, Comedy, Animation, Horror, Thriller, Adventure)
