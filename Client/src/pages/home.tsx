@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Search, ArrowRight, Calendar, Sparkles, Star, Clock } from "lucide-react";
+import { Search, ArrowRight, Calendar, Star, Clock } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -100,7 +100,6 @@ const { data: showtimesData } = useQuery({
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
 <Badge variant="outline" className="w-fit gap-1.5 border-cinema-gold/30 bg-cinema-gold/5 text-cinema-gold">
-                  <Sparkles className="size-3" />
                   {t("home.heroBadge")} — August 2026
                 </Badge>
               </motion.div>

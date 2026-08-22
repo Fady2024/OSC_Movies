@@ -110,13 +110,13 @@ function BookingCard({ booking, index, onCancel }: { booking: Booking; index: nu
         className={cn(
           "relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-300",
           "hover:border-border hover:shadow-lg hover:shadow-black/5",
-          booking.status === "cancelled" && "opacity-60 grayscale-[30%]"
+          booking.status === "cancelled" && "opacity-60 grayscale-30"
         )}
       >
         <div className="flex flex-col sm:flex-row">
           {/* Poster */}
-          <div className="relative sm:w-40 lg:w-48 flex-shrink-0">
-            <div className="aspect-[3/4] sm:aspect-auto sm:h-full overflow-hidden">
+          <div className="relative sm:w-40 lg:w-48 shrink-0">
+            <div className="aspect-3/4 sm:aspect-auto sm:h-full overflow-hidden">
               <motion.img
                 src={booking.moviePosterUrl}
                 alt={booking.movieTitle}
@@ -125,8 +125,8 @@ function BookingCard({ booking, index, onCancel }: { booking: Booking; index: nu
                 transition={{ duration: 0.6 }}
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-card/80 hidden sm:block" />
-            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent sm:hidden" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-transparent to-card/80 hidden sm:block" />
+            <div className="absolute inset-0 bg-linear-to-t from-card via-card/20 to-transparent sm:hidden" />
 
             {/* Status badge on poster */}
             <div className="absolute top-3 left-3">
@@ -265,7 +265,7 @@ function BookingCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border/60 bg-card">
       <div className="flex flex-col sm:flex-row">
-        <Skeleton className="aspect-[3/4] sm:aspect-auto sm:h-64 sm:w-40 lg:w-48 flex-shrink-0" />
+        <Skeleton className="aspect-3/4 sm:aspect-auto sm:h-64 sm:w-40 lg:w-48 shrink-0" />
         <div className="flex flex-1 flex-col gap-3 p-5">
           <Skeleton className="h-6 w-48" />
           <Skeleton className="h-3 w-24" />
@@ -392,7 +392,7 @@ export function MyBookingsPage() {
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/50 to-background" />
 
         <div className="relative mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <motion.div
@@ -432,7 +432,7 @@ export function MyBookingsPage() {
                 >
                   <div
                     className={cn(
-                      "absolute -right-6 -top-6 size-24 rounded-full bg-gradient-to-br to-transparent blur-2xl opacity-50",
+                      "absolute -right-6 -top-6 size-24 rounded-full bg-linear-to-br to-transparent blur-2xl opacity-50",
                       stat.glow
                     )}
                   />

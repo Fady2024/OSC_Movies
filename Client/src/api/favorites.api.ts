@@ -26,9 +26,7 @@ export async function getFavorites(
 }
 
 export async function addFavorite(movieId: string): Promise<Favorite> {
-  console.log('Sending addFavorite request:', { movieId });
   const { data: res } = await apiClient.post("/favorites", { movieId });
-  console.log('AddFavorite response:', res);
   return res.data;
 }
 
@@ -36,7 +34,7 @@ export async function removeFavorite(favoriteId: string): Promise<void> {
   await apiClient.delete(`/favorites/${favoriteId}`);
 }
 
-export async function isFavorite(movieId: string): Promise<boolean> {
+export async function isFavorite(movieId: string): Promise<{ isFavorite: boolean; favoriteId?: string }> {
   const { data: res } = await apiClient.get(`/favorites/check/${movieId}`);
-  return res.isFavorite;
+  return res;
 }

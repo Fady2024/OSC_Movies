@@ -58,10 +58,13 @@ export const removeFavorite = async (
 export const isFavorite = async (
   userId: string,
   movieId: string
-): Promise<boolean> => {
+): Promise<{ isFavorite: boolean; favoriteId?: string }> => {
   const favorite = await Favorite.findOne({
     user: userId,
     movie: movieId,
   });
-  return !!favorite;
+  return {
+    isFavorite: !!favorite,
+    favoriteId: favorite?._id?.toString(),
+  };
 };

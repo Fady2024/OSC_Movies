@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import { getMovieById } from "@/api/movies.api";
 import { getShowtimes } from "@/api/showtimes.api";
+import { FavoriteButton } from "@/components/shared/favorite-button";
 import {
   getMovieReviews,
   getMyReview,
@@ -79,7 +80,7 @@ export function MovieDetailPage() {
     return (
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[300px_1fr]">
-          <Skeleton className="aspect-[2/3] w-full max-w-xs rounded-2xl" />
+          <Skeleton className="aspect-2/3 w-full max-w-xs rounded-2xl" />
           <div className="space-y-4">
             <Skeleton className="h-10 w-2/3" />
             <Skeleton className="h-5 w-1/3" />
@@ -131,10 +132,13 @@ export function MovieDetailPage() {
             <motion.img
               src={movie.posterUrl}
               alt={movie.title}
-              className="aspect-[2/3] w-full object-cover"
+              className="aspect-2/3 w-full object-cover"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.5 }}
             />
+            <div className="absolute top-3 right-3">
+              <FavoriteButton movieId={movie.id} className="bg-background/80 backdrop-blur-sm" />
+            </div>
           </div>
         </motion.div>
 
@@ -157,9 +161,12 @@ export function MovieDetailPage() {
               <Badge variant="outline">{movie.language}</Badge>
             </div>
 
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              {movie.title}
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                {movie.title}
+              </h1>
+              <FavoriteButton movieId={movie.id} variant="button" />
+            </div>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
@@ -271,7 +278,7 @@ export function MovieDetailPage() {
                           key={date}
                           onClick={() => setSelectedDate(date)}
                           className={cn(
-                            "flex min-w-[64px] flex-col items-center gap-0.5 rounded-xl border px-4 py-3 transition-all",
+                            "flex min-w-16 flex-col items-center gap-0.5 rounded-xl border px-4 py-3 transition-all",
                             isActive
                               ? "border-primary bg-primary text-primary-foreground"
                               : "border-border hover:border-primary/50 hover:bg-accent"

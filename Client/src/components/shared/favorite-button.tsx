@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface FavoriteButtonProps {
   movieId: string;
@@ -17,6 +18,7 @@ export function FavoriteButton({ movieId, className, variant = "icon" }: Favorit
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isFav, setIsFav] = useState(false);
+  const [favoriteId, setFavoriteId] = useState<string | undefined>();
 
   const { data: isFavData } = useQuery({
     queryKey: ["isFavorite", movieId],
@@ -26,7 +28,8 @@ export function FavoriteButton({ movieId, className, variant = "icon" }: Favorit
 
   useEffect(() => {
     if (isFavData !== undefined) {
-      setIsFav(isFavData);
+      setIsFav(isFavData.isFavorite);
+      setFavoriteId(isFavData.favoriteId);
     }
   }, [isFavData]);
 
@@ -36,6 +39,9 @@ export function FavoriteButton({ movieId, className, variant = "icon" }: Favorit
       setIsFav(true);
       queryClient.invalidateQueries({ queryKey: ["isFavorite", movieId] });
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      toast.success("Added to favorites", {
+        description: "Movie has been added to your favorites",
+      });
     },
   });
 
@@ -43,8 +49,12 @@ export function FavoriteButton({ movieId, className, variant = "icon" }: Favorit
     mutationFn: (favoriteId: string) => removeFavorite(favoriteId),
     onSuccess: () => {
       setIsFav(false);
+      setFavoriteId(undefined);
       queryClient.invalidateQueries({ queryKey: ["isFavorite", movieId] });
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      toast.success("Removed from favorites", {
+        description: "Movie has been removed from your favorites",
+      });
     },
   });
 
@@ -56,15 +66,8 @@ export function FavoriteButton({ movieId, className, variant = "icon" }: Favorit
       return;
     }
 
-    if (isFav) {
-      // Find the favorite ID and remove it
-      queryClient.invalidateQueries({ queryKey: ["favorites"] }).then(() => {
-        const favorites = queryClient.getQueryData(["favorites"]) as any;
-        const favorite = favorites?.data?.find((f: any) => f.movie?.id === movieId);
-        if (favorite) {
-          removeMutation.mutate(favorite.id);
-        }
-      });
+    if (isFav && favoriteId) {
+      removeMutation.mutate(favoriteId);
     } else {
       addMutation.mutate();
     }

@@ -34,6 +34,6 @@ export const isFavorite = async (req: Request, res: Response) => {
   const authUser = req.user as AuthPayload;
   const movieId = Array.isArray(req.params.movieId) ? req.params.movieId[0] : req.params.movieId;
 
-  const isFav = await favoriteService.isFavorite(authUser.sub, movieId);
-  res.json({ isFavorite: isFav });
+  const result = await favoriteService.isFavorite(authUser.sub, movieId);
+  res.json(result);
 };
